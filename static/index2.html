@@ -1,0 +1,309 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GapFinder AI | Learning dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard"><span class="logo">G</span><span>GapFinder <em>AI</em><small>PERSONAL LEARNING</small></span></a>
+      <p class="side-label">WORKSPACE</p>
+      <nav>
+        <a class="nav active" data-page="dashboard">▦ &nbsp; Dashboard</a>
+        <a class="nav" data-page="materials">▤ &nbsp; Study materials</a>
+        <a class="nav" data-page="tutor">✧ &nbsp; AI tutor <i>RAG</i></a>
+        <a class="nav" data-page="quiz">☑ &nbsp; Practice quiz</a>
+        <a class="nav" data-page="progress">◷ &nbsp; Learning analytics</a>
+        <a class="nav" data-page="revision">◎ &nbsp; Revision plan</a>
+      </nav>
+      <div class="tip">
+        <b>✦ Learning tip</b>
+        <p>Ask questions about your notes to get answers with source references.</p>
+      </div>
+      <button id="logout" class="logout">↪ Sign out</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button id="menu" class="menu">☰</button>
+        <span>Workspace / <b id="crumb">Dashboard</b></span>
+        <div class="user">
+          <span class="status">● Learning space ready</span>
+          <span class="avatar" id="avatar">L</span>
+          <b id="userName">Learner</b>
+        </div>
+      </header>
+
+      <div class="wrap">
+        <section class="page active" id="dashboard">
+          <div class="welcome">
+            <div>
+              <small class="eyebrow">YOUR PERSONAL LEARNING SPACE</small>
+              <h1>Welcome back, <span id="welcomeName">Learner</span> ✦</h1>
+              <p>Small steps today. Stronger understanding tomorrow.</p>
+            </div>
+            <button class="primary" data-go="materials">＋ Add study material</button>
+          </div>
+
+          <div class="hero">
+            <div>
+              <small class="pill">✧ AI-POWERED LEARNING</small>
+              <h2>Learn smarter.<br><em>Find your gaps.</em></h2>
+              <p>Turn your own study notes into a personalised learning journey with grounded answers, quizzes, and revision insights.</p>
+              <button class="light" data-go="tutor">Ask your AI tutor →</button>
+            </div>
+            <div class="hero-art">
+              <div class="orb">✧</div>
+              <div class="float f1">✦ RAG Tutor<b>Source-grounded answers</b></div>
+              <div class="float f2">▤ Knowledge<b>Build mastery daily</b></div>
+            </div>
+          </div>
+
+          <div class="stats">
+            <article>
+              <span class="ico purple">▤</span>
+              <p>Study materials</p>
+              <h2 id="nMaterials">0</h2>
+              <small>Uploaded documents</small>
+            </article>
+            <article>
+              <span class="ico blue">✧</span>
+              <p>Quiz accuracy</p>
+              <h2 id="accuracy">—</h2>
+              <small>Based on attempts</small>
+            </article>
+            <article>
+              <span class="ico teal">◷</span>
+              <p>Quiz attempts</p>
+              <h2 id="attempts">0</h2>
+              <small>Keep practising</small>
+            </article>
+            <article>
+              <span class="ico orange">◎</span>
+              <p>Topics to revise</p>
+              <h2 id="gapCount">0</h2>
+              <small>From incorrect answers</small>
+            </article>
+          </div>
+
+          <div class="columns">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Continue your learning</h3>
+                  <p>Choose what you want to work on next.</p>
+                </div>
+              </div>
+              <div class="actions">
+                <button data-go="materials"><span class="ico purple">▤</span><b>Upload & learn</b><small>Add PDF, DOCX or TXT notes</small><strong>Add material →</strong></button>
+                <button data-go="tutor"><span class="ico blue">✧</span><b>Ask AI tutor</b><small>Ask questions from your notes</small><strong>Ask a question →</strong></button>
+                <button data-go="quiz"><span class="ico pink">☑</span><b>Practice quiz</b><small>Test your understanding</small><strong>Start practice →</strong></button>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3>Learning progress</h3>
+                  <p>Your quiz performance so far.</p>
+                </div>
+              </div>
+              <div class="progress">
+                <div class="ring" id="ring"><span id="ringValue">0%</span></div>
+                <div>
+                  <b id="progressTitle">Ready to begin?</b>
+                  <p id="progressHint">Upload notes and try your first quiz.</p>
+                </div>
+              </div>
+              <div class="bar"><i id="bar"></i></div>
+            </article>
+          </div>
+
+          <div class="columns">
+            <article class="panel">
+              <h3>Recent study materials</h3>
+              <div id="recent" class="empty">No documents yet. Upload notes to get started.</div>
+            </article>
+            <article class="panel">
+              <h3>Focus for revision</h3>
+              <div id="gaps" class="empty">No revision topics yet. Try a quiz.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="materials">
+          <div class="heading">
+            <small class="eyebrow">YOUR KNOWLEDGE LIBRARY</small>
+            <h1>Study materials</h1>
+            <p>Upload notes to create a searchable knowledge base for RAG.</p>
+          </div>
+          <div class="upload" id="drop">
+            <div class="upload-icon">↑</div>
+            <h3>Bring your study notes to life</h3>
+            <p>Drop a file here or choose a file from your device.</p>
+            <div class="types"><span>PDF</span><span>DOCX</span><span>TXT</span></div>
+            <input id="files" type="file" accept=".pdf,.txt,.docx" multiple hidden>
+            <button class="primary" id="choose">Choose files</button>
+            <small>Text is extracted and split into overlapping passages for retrieval.</small>
+          </div>
+          <p id="uploadMsg" class="notice hide"></p>
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Your library</h3>
+                <p id="countText">0 documents uploaded</p>
+              </div>
+            </div>
+            <div id="library" class="empty">Your library is empty. Upload a document to begin.</div>
+          </article>
+        </section>
+
+        <section class="page" id="tutor">
+          <div class="heading">
+            <small class="eyebrow">RETRIEVAL-AUGMENTED GENERATION</small>
+            <h1>AI tutor <span class="tag">RAG ENABLED</span></h1>
+            <p>Ask questions about your notes and inspect the source passages used.</p>
+          </div>
+          <div class="tutor-layout">
+            <article class="panel chat">
+              <div class="chat-head">
+                <span class="ico purple">✧</span>
+                <div><b>GapFinder Study Assistant</b><small>● Grounded in your library</small></div>
+                <span class="tag">RAG</span>
+              </div>
+              <div id="messages" class="messages">
+                <div class="bubble">
+                  <b>Hi there! Let's learn together.</b>
+                  <p>Upload your notes, then ask me to explain a concept or clarify something confusing. I’ll retrieve relevant passages and show their sources.</p>
+                  <div class="suggestions">
+                    <button data-question="Summarise the main concepts in my uploaded notes">Summarise my notes</button>
+                    <button data-question="Explain the most important concepts in simple words">Explain simply</button>
+                    <button data-question="What should I revise first?">What should I revise?</button>
+                  </div>
+                </div>
+              </div>
+              <form id="askForm" class="ask">
+                <textarea id="question" placeholder="Ask a question about your study materials…" required></textarea>
+                <button class="primary">↑</button>
+              </form>
+              <small class="disclaimer">Answers are based on retrieved passages. Verify important details with your original notes.</small>
+            </article>
+            <article class="panel">
+              <h3>Knowledge sources</h3>
+              <p class="sub">Passages retrieved for your latest question.</p>
+              <div id="sources" class="empty">Retrieved sources will appear here.</div>
+              <div class="source-note">ⓘ RAG retrieves relevant text first. Add an API key to generate grounded AI explanations.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="quiz">
+          <div class="heading">
+            <small class="eyebrow">PRACTISE WITH PURPOSE</small>
+            <h1>Practice quiz</h1>
+            <p>Generate a question from your uploaded notes.</p>
+          </div>
+          <div class="quiz-layout">
+            <article class="panel">
+              <span class="ico purple">☑</span>
+              <h3>Build your practice session</h3>
+              <p class="sub">Enter a topic found in your materials.</p>
+              <form id="quizForm">
+                <label>Topic to practise<input id="topic" placeholder="e.g. supervised learning" required></label>
+                <button class="primary full">Generate question →</button>
+              </form>
+              <p class="source-note">✦ Specific topics retrieve more relevant notes.</p>
+            </article>
+            <article class="panel" id="quizArea">
+              <div id="quizEmpty" class="quiz-empty">
+                <span>✎</span>
+                <h3>Your question will appear here</h3>
+                <p>Generate a quiz to test what you know.</p>
+              </div>
+              <div id="quizCard" class="hide">
+                <div class="quiz-top">
+                  <span class="tag">FROM YOUR NOTES</span>
+                  <small id="quizSource"></small>
+                </div>
+                <h3 id="quizQuestion"></h3>
+                <div id="options"></div>
+                <button id="checkAnswer" class="primary full" disabled>Check answer</button>
+                <div id="feedback" class="feedback hide"></div>
+                <button id="another" class="secondary full hide">Try another topic</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page" id="progress">
+          <div class="heading">
+            <small class="eyebrow">MEASURE YOUR GROWTH</small>
+            <h1>Learning analytics</h1>
+            <p>Your practice performance and knowledge gaps.</p>
+          </div>
+          <div class="analytics-grid">
+            <article class="panel stat-box">
+              <small>Accuracy</small>
+              <h2 id="analyticsAccuracy">0%</h2>
+              <p>Your overall correct rate.</p>
+            </article>
+            <article class="panel stat-box">
+              <small>Attempts</small>
+              <h2 id="totalCount">0</h2>
+              <p>Total quiz attempts.</p>
+            </article>
+            <article class="panel stat-box">
+              <small>Correct</small>
+              <h2 id="correctCount">0</h2>
+              <p>Questions answered correctly.</p>
+            </article>
+            <article class="panel stat-box">
+              <small>Gaps</small>
+              <h2 id="analyticsGaps">0</h2>
+              <p>Topics you should revisit.</p>
+            </article>
+          </div>
+          <article class="panel">
+            <h3>Quiz history</h3>
+            <div id="gapHistory" class="empty">No quiz history yet.</div>
+          </article>
+        </section>
+
+        <section class="page" id="revision">
+          <div class="heading">
+            <small class="eyebrow">YOUR NEXT BEST STEP</small>
+            <h1>Revision plan</h1>
+            <p>Use recent mistakes to decide what to study next.</p>
+          </div>
+          <div class="revision-banner">
+            <span>✦</span>
+            <div>
+              <h2>A little revision goes a long way.</h2>
+              <p>Start with topics you missed, revisit the matching material, then test yourself again.</p>
+            </div>
+          </div>
+          <div id="revisionList" class="empty">Your revision plan appears after you complete a quiz.</div>
+          <article class="panel video-panel">
+            <div>
+              <h3>Need another explanation?</h3>
+              <p>Search for a video lesson on a topic you want to revisit.</p>
+            </div>
+            <form id="videoForm">
+              <input id="videoTopic" placeholder="Enter a topic">
+              <button class="primary">Find videos ↗</button>
+            </form>
+          </article>
+        </section>
+
+        <footer>GapFinder AI · Learn with evidence. Grow with practice.</footer>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
