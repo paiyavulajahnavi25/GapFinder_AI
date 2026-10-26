@@ -19,7 +19,7 @@ A VS Code-friendly student prototype with a responsive dashboard, login/signup, 
    ```powershell
    python app.py
    ```
-6. Open **http://127.0.0.1:5000** in your browser and create an account.
+6. Open **http://127.0.0.1:5001** in your browser and create an account. This address is local to your computer and is not a public website link.
 7. Upload readable PDF, TXT, or DOCX study notes, then ask questions in AI Tutor.
 
 ## How RAG works in this project
