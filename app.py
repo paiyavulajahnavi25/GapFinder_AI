@@ -1,4 +1,4 @@
-import os, re, json, uuid
+import os, re, json, uuid, tempfile
 from pathlib import Path
 from datetime import datetime
 from urllib.parse import quote_plus
@@ -11,10 +11,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 ROOT=Path(__file__).resolve().parent
-UPLOADS=ROOT/'uploads'; DATA=ROOT/'data'
-UPLOADS.mkdir(exist_ok=True); DATA.mkdir(exist_ok=True)
+STORAGE_ROOT=Path(tempfile.gettempdir())/'gapfinder_ai' if os.getenv('VERCEL') == '1' else ROOT
+UPLOADS=STORAGE_ROOT/'uploads'; DATA=STORAGE_ROOT/'data'
+UPLOADS.mkdir(parents=True,exist_ok=True); DATA.mkdir(parents=True,exist_ok=True)
 USERS=DATA/'users.json'; STATE=DATA/'state.json'
-app=Flask(__name__,static_folder='static'); app.secret_key=os.getenv('GAPFINDER_SECRET','local-demo-change-this-secret')
+app=Flask(__name__,static_folder=None); app.secret_key=os.getenv('GAPFINDER_SECRET','local-demo-change-this-secret')
 
 def readj(path, default):
     try: return json.loads(path.read_text(encoding='utf-8'))
@@ -62,14 +63,13 @@ def answer_with_context(question,ctx):
     if ctx:return '\n\n'.join(f"From {c['source']} (passage {c['chunk']}):\n{c['text']}" for c in ctx[:3]),'Local RAG retrieval'
     return 'I could not find a matching passage. Upload relevant notes and try again.','No matching source'
 @app.get('/')
-def home(): return send_from_directory('static','index3.html')
+def home(): return send_from_directory(ROOT/'public','index3.html')
 @app.get('/login')
-def login_page(): return send_from_directory('static','login.html')
+def login_page(): return send_from_directory(ROOT/'public','login.html')
 @app.get('/settings')
-def settings_page(): return send_from_directory('static','settings.html')
+def settings_page(): return send_from_directory(ROOT/'public','settings.html')
 @app.get('/api/session')
 def session_info(): return jsonify(logged_in=bool(session.get('email')),name=session.get('name','Learner'))
-@app.post('/api/signup')
 @app.post('/api/signup')
 def signup():
     d=request.get_json(force=True); name=d.get('name','').strip(); email=d.get('email','').strip().lower(); password=d.get('password','')
@@ -79,6 +79,7 @@ def signup():
     users[email]={'name':name,'hash':generate_password_hash(password)};writej(USERS,users);session['email']=email;session['name']=name
     return jsonify(ok=True)
 
+@app.post('/api/login')
 def login():
     d=request.get_json(force=True); email=d.get('email','').strip().lower(); user=readj(USERS,{}).get(email)
     if not user or not check_password_hash(user['hash'],d.get('password','')):return jsonify(error='Incorrect email or password.'),401
@@ -139,6 +140,6 @@ def quiz_result():
 def videos():return jsonify(url='https://www.youtube.com/results?search_query='+quote_plus(request.args.get('topic','study skills')+' explained'))
 @app.get('/<path:filename>')
 def static_files(filename):
-    if filename in ('style.css','app.js','login.js','settings.html'):return send_from_directory('static',filename)
+    if filename in ('style.css','app.js','login.js','settings.html'):return send_from_directory(ROOT/'public',filename)
     return jsonify(error='Not found'),404
 if __name__=='__main__': app.run(debug=True,port=5001)

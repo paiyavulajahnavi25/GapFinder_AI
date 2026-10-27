@@ -28,6 +28,11 @@ A VS Code-friendly student prototype with a responsive dashboard, login/signup, 
 3. Use TF-IDF and cosine similarity to retrieve passages relevant to a question.
 4. Return the relevant source passages. If `OPENAI_API_KEY` is configured, send only retrieved passages as context to the model for a grounded answer / quiz.
 
+## Deploy on Vercel (prototype only)
+Vercel detects the Flask application in the root `app.py`. Frontend files are in `public/` so Vercel can serve them as static assets.
+
+For Vercel, the app writes account and study data plus uploads to `/tmp/gapfinder_ai`. This storage is temporary and instance-local: data may disappear after a restart or deployment, and users on the same instance are not isolated from each other's materials. Set `GAPFINDER_SECRET` and, optionally, `OPENAI_API_KEY` in the Vercel project's environment variables. Do not use this deployment for sensitive material or production accounts; production needs persistent database and file storage with per-user isolation.
+
 ### Optional generated AI answers and quizzes
 Without an API key, local retrieval still works and the tutor displays the matching passages. To enable generated responses, set your key in the same terminal before starting Flask:
 ```powershell
@@ -37,7 +42,7 @@ python app.py
 Never put a real API key in frontend JavaScript or commit it to a public repository.
 
 ## Notes / limitations
-- This is a local demo, not a production deployment. It currently stores uploaded material in a shared local dataset; do not upload sensitive files.
+- This is a prototype, not a production deployment. Local runs store uploaded material in a shared local dataset; Vercel runs use temporary, instance-local storage. Do not upload sensitive files.
 - Local demo login hashes passwords, but production deployment requires per-user data isolation, HTTPS, CSRF protections, rate limiting, and a strong secret key.
 - Scanned PDFs may need OCR before upload.
 - Video suggestions open YouTube search results; YouTube Data API integration is not included.
